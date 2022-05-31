@@ -1,3 +1,37 @@
+<?php
+if (isset($_POST["submission"])){
+
+  $email = $_POST["email"];
+  $message = $_POST["msg"];
+  $store_name = "message.json";
+  
+  if(!file_exists($store_name)){
+    fopen("message.json", "w");  
+  }
+  $json_store = file_get_contents($store_name);
+
+  $data = array(
+     array(
+         'email' => $email,
+         'message' => $message
+     )
+  );
+
+  if(strlen($json_store) < 1){
+    $json_data = json_encode($data);
+  }else{
+    $json_data = json_decode($json_store);
+    array_push($json_data, ["email" => $email, "message" => $message]);
+    $json_data = json_encode($json_data);
+  }
+  $stored = file_put_contents('message.json', $json_data, LOCK_EX);
+  if($stored){
+    echo "<script type='text/javascript'>alert('Message has been sent!');</script>";
+  }
+}
+
+
+?>
 <html>
   <head>
     <title>Honestyan Didyafarhan | Curriculum Vitae</title>
